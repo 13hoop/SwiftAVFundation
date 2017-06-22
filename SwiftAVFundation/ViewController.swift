@@ -26,7 +26,6 @@ class ViewController: UIViewController {
     elm.setTitleColor(.red, for: .highlighted)
     return elm
   }()
-  
   var urlTextField: UITextField = {
     let elm = UITextField()
     elm.backgroundColor = UIColor(hex: "eeeeee")
@@ -36,7 +35,6 @@ class ViewController: UIViewController {
     elm.placeholder = "input url here"
     return elm
   }()
-  
   var playView: YRPlayView = {
     let elm = YRPlayView()
     elm.translatesAutoresizingMaskIntoConstraints = false
@@ -61,10 +59,22 @@ class ViewController: UIViewController {
 //    }
 //  }
   
+  
+  let player = AVPlayer()
+  var playerLayer: AVPlayerLayer!
+  let movieUrl: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+  
     setFrame()
+    
+    playerLayer = AVPlayerLayer(player: player)
+    self.playView.layer.addSublayer(playerLayer)
+    
+    let playerItem = AVPlayerItem(url: movieUrl)
+    player.replaceCurrentItem(with: playerItem)
+    
     btn.addTarget(self, action: #selector(ViewController.palyBtnClick), for: .touchUpInside)
 //    
 //    let statusKey = "tracks"
@@ -122,14 +132,26 @@ class ViewController: UIViewController {
   
     view.addSubview(playView)
     playView.widthAnchor.constraint(equalToConstant: YRRule.W_Screen).isActive = true
-    playView.heightAnchor.constraint(equalToConstant: YRRule.H_Screen / 3).isActive = true
+    playView.heightAnchor.constraint(equalToConstant: YRRule.H_Screen / 2).isActive = true
     playView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     playView.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 30).isActive = true
   }
   
+  var isPlaying: Bool = false
   func palyBtnClick() {
-    let vc = VideoPlayerViewController()
-    navigationController?.pushViewController(vc, animated: false)
+
+    playerLayer.frame = playView.bounds
+  
+    if isPlaying {
+      self.player.pause()
+      isPlaying = false
+    }else {
+      self.player.play()
+      isPlaying = true
+    }
+    
+//    let vc = VideoPlayerViewController()
+//    navigationController?.pushViewController(vc, animated: false)
   }
   
 }
