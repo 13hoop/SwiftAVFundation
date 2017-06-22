@@ -60,20 +60,20 @@ class ViewController: UIViewController {
 //  }
   
   
-  let player = AVPlayer()
-  var playerLayer: AVPlayerLayer!
-  let movieUrl: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
+//  let player = AVPlayer()
+//  var playerLayer: AVPlayerLayer!
+//  let movieUrl: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
   
   override func viewDidLoad() {
     super.viewDidLoad()
   
     setFrame()
     
-    playerLayer = AVPlayerLayer(player: player)
-    self.playView.layer.addSublayer(playerLayer)
-    
-    let playerItem = AVPlayerItem(url: movieUrl)
-    player.replaceCurrentItem(with: playerItem)
+//    playerLayer = AVPlayerLayer(player: player)
+//    self.playView.layer.addSublayer(playerLayer)
+//    
+//    let playerItem = AVPlayerItem(url: movieUrl)
+//    player.replaceCurrentItem(with: playerItem)
     
     btn.addTarget(self, action: #selector(ViewController.palyBtnClick), for: .touchUpInside)
 //    
@@ -140,18 +140,17 @@ class ViewController: UIViewController {
   var isPlaying: Bool = false
   func palyBtnClick() {
 
-    playerLayer.frame = playView.bounds
-  
-    if isPlaying {
-      self.player.pause()
-      isPlaying = false
-    }else {
-      self.player.play()
-      isPlaying = true
-    }
+//    playerLayer.frame = playView.bounds
+//    if isPlaying {
+//      self.player.pause()
+//      isPlaying = false
+//    }else {
+//      self.player.play()
+//      isPlaying = true
+//    }
     
-//    let vc = VideoPlayerViewController()
-//    navigationController?.pushViewController(vc, animated: false)
+    let vc = VideoPlayerViewController()
+    navigationController?.pushViewController(vc, animated: false)
   }
   
 }
