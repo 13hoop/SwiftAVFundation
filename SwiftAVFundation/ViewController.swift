@@ -60,20 +60,16 @@ class ViewController: UIViewController {
 //  }
   
   
-//  let player = AVPlayer()
-//  var playerLayer: AVPlayerLayer!
+  let player = AVPlayer()
 //  let movieUrl: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
+//
+  let movieUrl: URL = URL(string: "http://baobab.wdjcdn.com/1456317490140jiyiyuetai_x264.mp4")!
   
   override func viewDidLoad() {
     super.viewDidLoad()
   
     setFrame()
-    
-//    playerLayer = AVPlayerLayer(player: player)
-//    self.playView.layer.addSublayer(playerLayer)
-//    
-//    let playerItem = AVPlayerItem(url: movieUrl)
-//    player.replaceCurrentItem(with: playerItem)
+    videoPrepared()
     
     btn.addTarget(self, action: #selector(ViewController.palyBtnClick), for: .touchUpInside)
 //    
@@ -136,21 +132,26 @@ class ViewController: UIViewController {
     playView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     playView.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 30).isActive = true
   }
-  
+  func videoPrepared() {
+    playView.player = player
+    let playItem = AVPlayerItem(url: movieUrl)
+    player.replaceCurrentItem(with: playItem)
+  }
   var isPlaying: Bool = false
   func palyBtnClick() {
 
-//    playerLayer.frame = playView.bounds
-//    if isPlaying {
-//      self.player.pause()
-//      isPlaying = false
-//    }else {
-//      self.player.play()
-//      isPlaying = true
-//    }
+    print(" click: \(playView.frame)")
     
-    let vc = VideoPlayerViewController()
-    navigationController?.pushViewController(vc, animated: false)
+    if isPlaying {
+      self.player.pause()
+      isPlaying = false
+    }else {
+      self.player.play()
+      isPlaying = true
+    }
+    
+//    let vc = VideoPlayerViewController()
+//    navigationController?.pushViewController(vc, animated: false)
   }
   
 }

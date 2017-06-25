@@ -11,12 +11,12 @@
 		B41465411EF54C3300561091 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41465401EF54C3300561091 /* ViewController.swift */; };
 		B41465461EF54C3300561091 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B41465451EF54C3300561091 /* Assets.xcassets */; };
 		B41465491EF54C3300561091 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B41465471EF54C3300561091 /* LaunchScreen.storyboard */; };
+		B46EA7061EFE6F5F00C3183A /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46EA7051EFE6F5F00C3183A /* VideoPlayerViewController.swift */; };
 		B4F3F2E51EF55CFF00F254D1 /* ColorExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2E41EF55CFF00F254D1 /* ColorExt.swift */; };
 		B4F3F2E71EF5EFC300F254D1 /* Bach.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B4F3F2E61EF5EFC300F254D1 /* Bach.mp4 */; };
 		B4F3F2E91EF6675900F254D1 /* PlayerSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2E81EF6675900F254D1 /* PlayerSwift.swift */; };
 		B4F3F2EB1EF66DE500F254D1 /* YRPlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2EA1EF66DE500F254D1 /* YRPlayView.swift */; };
 		B4F3F2ED1EF6706700F254D1 /* YRRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2EC1EF6706700F254D1 /* YRRule.swift */; };
-		B4F3F2EF1EF6A24100F254D1 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F3F2EE1EF6A24000F254D1 /* VideoPlayerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,12 +26,12 @@
 		B41465451EF54C3300561091 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B41465481EF54C3300561091 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B414654A1EF54C3300561091 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B46EA7051EFE6F5F00C3183A /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		B4F3F2E41EF55CFF00F254D1 /* ColorExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExt.swift; sourceTree = "<group>"; };
 		B4F3F2E61EF5EFC300F254D1 /* Bach.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = Bach.mp4; sourceTree = "<group>"; };
 		B4F3F2E81EF6675900F254D1 /* PlayerSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSwift.swift; sourceTree = "<group>"; };
 		B4F3F2EA1EF66DE500F254D1 /* YRPlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YRPlayView.swift; sourceTree = "<group>"; };
 		B4F3F2EC1EF6706700F254D1 /* YRRule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YRRule.swift; sourceTree = "<group>"; };
-		B4F3F2EE1EF6A24000F254D1 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +66,6 @@
 			children = (
 				B414653E1EF54C3300561091 /* AppDelegate.swift */,
 				B41465401EF54C3300561091 /* ViewController.swift */,
-				B4F3F2EE1EF6A24000F254D1 /* VideoPlayerViewController.swift */,
 				B4F3F2EA1EF66DE500F254D1 /* YRPlayView.swift */,
 				B4F3F2E41EF55CFF00F254D1 /* ColorExt.swift */,
 				B4F3F2EC1EF6706700F254D1 /* YRRule.swift */,
@@ -75,6 +74,7 @@
 				B41465471EF54C3300561091 /* LaunchScreen.storyboard */,
 				B414654A1EF54C3300561091 /* Info.plist */,
 				B4F3F2E61EF5EFC300F254D1 /* Bach.mp4 */,
+				B46EA7051EFE6F5F00C3183A /* VideoPlayerViewController.swift */,
 			);
 			path = SwiftAVFundation;
 			sourceTree = "<group>";
@@ -155,7 +155,7 @@
 				B41465411EF54C3300561091 /* ViewController.swift in Sources */,
 				B4F3F2E51EF55CFF00F254D1 /* ColorExt.swift in Sources */,
 				B4F3F2ED1EF6706700F254D1 /* YRRule.swift in Sources */,
-				B4F3F2EF1EF6A24100F254D1 /* VideoPlayerViewController.swift in Sources */,
+				B46EA7061EFE6F5F00C3183A /* VideoPlayerViewController.swift in Sources */,
 				B4F3F2E91EF6675900F254D1 /* PlayerSwift.swift in Sources */,
 				B4F3F2EB1EF66DE500F254D1 /* YRPlayView.swift in Sources */,
 				B414653F1EF54C3300561091 /* AppDelegate.swift in Sources */,
