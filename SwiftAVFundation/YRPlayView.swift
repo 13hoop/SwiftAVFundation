@@ -10,28 +10,29 @@ import UIKit
 import AVFoundation
 
 class YRPlayView: UIView {
-  lazy var slider: UISlider = {
+  var slider: UISlider = {
     let elm = UISlider()
     elm.minimumValue = 0
     elm.translatesAutoresizingMaskIntoConstraints = false
     return elm
   }()
-  lazy var totalTimeLb: UILabel = {
+  private lazy var totalTimeLb: UILabel = {
     let elm = UILabel()
     elm.translatesAutoresizingMaskIntoConstraints = false
     elm.text = "00:00"
     return elm
   }()
-  lazy var currentTimeLb: UILabel = {
+  private lazy var currentTimeLb: UILabel = {
     let elm = UILabel()
     elm.translatesAutoresizingMaskIntoConstraints = false
     elm.text = "00:00"
     return elm
   }()
+  private var playerItemContext = 0
 
   let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.whiteLarge)
   
-  var playerLayer: AVPlayerLayer?
+  private var playerLayer: AVPlayerLayer?
   var player:AVPlayer? {
     didSet {
       playerLayer = AVPlayerLayer(player: player)
@@ -40,37 +41,57 @@ class YRPlayView: UIView {
     }
   }
   
-  let timeInterval: CMTime = CMTimeMakeWithSeconds(1.0, 10)
-  var periodicTimer: Any?
-  func updateStatus() {
-    playerLayer?.addObserver(self, forKeyPath: "readyForDisplay", options: [NSKeyValueObservingOptions.new, NSKeyValueObservingOptions.initial], context: nil)
+  private let timeInterval: CMTime = CMTimeMakeWithSeconds(1.0, 10)
+  private var periodicTimer: Any?
+  private func updateStatus() {
+    playerLayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerLayer.isReadyForDisplay), options: [NSKeyValueObservingOptions.new, NSKeyValueObservingOptions.initial], context: &playerItemContext)
     
-    periodicTimer = player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main, using: {[weak self] stepTime in
-      let x = self?.cmTimeToStr(cmTimeSeconds: stepTime.seconds)
-      print("~~> \(String(describing: x))")
-      self?.currentTimeLb.text = x
-      self?.slider.value = Float(stepTime.seconds)
+    player?.currentItem?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp), options: [.old, .new], context: &playerItemContext)
+
+    periodicTimer = player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main, using: { stepTime in
+      self.updateTime(timeSeconds: stepTime.seconds)
     })
   }
   
-  deinit {
-    playerLayer?.removeObserver(self, forKeyPath: "readyForDisplay")
-    player?.removeTimeObserver(periodicTimer!)
+  func updateTime(timeSeconds: Double) {
+    let x = self.cmTimeToStr(cmTimeSeconds: timeSeconds)
+    self.currentTimeLb.text = x
+    self.slider.setValue(Float(timeSeconds), animated: false)
   }
-  
+
   override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-    if (playerLayer?.isReadyForDisplay)! {
-      activityIndicator.stopAnimating()
-      slider.maximumValue = Float(player!.currentItem!.duration.seconds)
-      totalTimeLb.text = cmTimeToStr(cmTimeSeconds: player!.currentItem!.duration.seconds)
+
+    // Only handle observations for the playerItemContext
+    guard context == &playerItemContext else {
+      super.observeValue(forKeyPath: keyPath,
+                         of: object,
+                         change: change,
+                         context: context)
+      return
+    }
+    
+    if keyPath == #keyPath(AVPlayerLayer.isReadyForDisplay) {
+      if (playerLayer?.isReadyForDisplay)! {
+        activityIndicator.stopAnimating()
+        slider.maximumValue = Float(player!.currentItem!.duration.seconds)
+        totalTimeLb.text = cmTimeToStr(cmTimeSeconds: player!.currentItem!.duration.seconds)
+      }
+    }
+    
+    if keyPath == #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp) {
+      if (player?.currentItem?.isPlaybackLikelyToKeepUp)! {
+        activityIndicator.stopAnimating()
+      }else {
+        activityIndicator.startAnimating()
+      }
     }
   }
   
-  func cmTimeToStr(cmTimeSeconds: Double) -> String {
+   private func cmTimeToStr(cmTimeSeconds: Double) -> String {
     let x = cmTimeSeconds
     let m = lround(x / 60)
     let s = lround(x) % 60
-    print("\(m) - \(s)")
+//    print("\(m) - \(s)")
     return String(format: "%02d:%02d", m, s)
   }
   
@@ -78,11 +99,9 @@ class YRPlayView: UIView {
     super.init(frame: frame)
     setViews()
     activityIndicator.startAnimating()
-    
-//    slider.addTarget(<#T##target: Any?##Any?#>, action: <#T##Selector#>, for: <#T##UIControlEvents#>)
   }
   
-  func setViews() {
+  private func setViews() {
     activityIndicator.hidesWhenStopped = true
     addSubview(activityIndicator)
     
@@ -113,5 +132,11 @@ class YRPlayView: UIView {
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  deinit {
+    playerLayer?.removeObserver(self, forKeyPath: #keyPath(AVPlayerLayer.isReadyForDisplay), context: &playerItemContext)
+    player?.currentItem?.removeObserver(self, forKeyPath: #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp), context: &playerItemContext)
+    player?.removeTimeObserver(periodicTimer!)
   }
 }

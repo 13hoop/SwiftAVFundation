@@ -6,6 +6,9 @@ protocol sharedInstanceDelegate {
   func sharedInstanceChanged(newVal: Bool)
 }
 
+protocol errorMessageDelegate {
+  func errorMessageChanged(newVal: String)
+}
 class RadioPlayer : NSObject {
   
   static let sharedInstance = RadioPlayer()

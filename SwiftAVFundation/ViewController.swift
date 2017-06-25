@@ -6,14 +6,8 @@
 //  Copyright © 2017年 YongRen. All rights reserved.
 //
 
-
-// https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8
 import UIKit
 import AVFoundation
-
-protocol errorMessageDelegate {
-  func errorMessageChanged(newVal: String)
-}
 
 class ViewController: UIViewController {
   
@@ -41,81 +35,22 @@ class ViewController: UIViewController {
     elm.backgroundColor = .red
     return elm
   }()
-
-//  var url:URL = URL(fileURLWithPath: "Bach.mp4", isDirectory: true)
-//  let url: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
-//  var urlAsset: AVURLAsset = AVURLAsset(url: NSURL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")! as URL, options: [:])
-//  var player = AVPlayer(url: NSURL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")! as URL)
-//  var playerItem: AVPlayerItem?
-//  
-//  var timeObserver: AnyObject!
-//  
-//  var errorDelegate:errorMessageDelegate? = nil
-//  var errorMessage = "" {
-//    didSet {
-//      if let delegate = self.errorDelegate {
-//        delegate.errorMessageChanged(newVal: self.errorMessage)
-//      }
-//    }
-//  }
-  
   
   let player = AVPlayer()
-//  let movieUrl: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
-//
+  //  let movieUrl: URL = URL(string: "https://content.jwplatform.com/manifests/vM7nH0Kl.m3u8")!
+  //
   let movieUrl: URL = URL(string: "http://baobab.wdjcdn.com/1456317490140jiyiyuetai_x264.mp4")!
   
   override func viewDidLoad() {
     super.viewDidLoad()
-  
+    
     setFrame()
     videoPrepared()
     
     btn.addTarget(self, action: #selector(ViewController.palyBtnClick), for: .touchUpInside)
-//    
-//    let statusKey = "tracks"
-//    let keys = [statusKey, "loaded"]
-//    self.urlAsset.loadValuesAsynchronously(forKeys: keys) {
-////      var error: Error? = nil
-//      var error: NSError? = nil
-//      DispatchQueue.main.async {
-//        let status: AVKeyValueStatus = self.urlAsset.statusOfValue(forKey: statusKey, error: &error)
-//
-//        if status == AVKeyValueStatus.loaded {
-//          self.playerItem = AVPlayerItem(asset: self.urlAsset)
-//          self.player = AVPlayer(playerItem: self.playerItem)
-//        }else {
-//          print(error!)
-//        }
-//      }
-//    }
-    
-//    NotificationCenter.default.addObserver(
-//      forName: NSNotification.Name.AVPlayerItemFailedToPlayToEndTime,
-//      object: nil,
-//      queue: nil,
-//      using: { notification in
-//        print("Status: Failed to continue")
-//        self.errorMessage = "Stream was interrupted"
-//    })
-//    
-//    print("Initializing new player")
   }
   
-  func palyerItemDidReachEnd(notify: NSNotification) {
-    
-  }
-  
-//  func watchSlider() {
-//    let stepTime: CMTime = CMTimeMakeWithSeconds(1.0, 10)
-//    self.player.addPeriodicTimeObserver(forInterval: stepTime, queue: nil)  { (elapsedTime: CMTime) -> Void in
-//      // up scrubber UI here
-//      print("elapsedTime now:", CMTimeGetSeconds(elapsedTime))
-//      
-//    }
-//  }
-  
-  func setFrame(){
+  func setFrame() {
     view.backgroundColor = UIColor.lightGray
     
     view.addSubview(urlTextField)
@@ -125,23 +60,29 @@ class ViewController: UIViewController {
     view.addSubview(btn)
     view.centerXAnchor.constraint(equalTo: btn.centerXAnchor).isActive = true
     view.bottomAnchor.constraint(equalTo: btn.bottomAnchor, constant: 20).isActive = true
-  
+    
     view.addSubview(playView)
     playView.widthAnchor.constraint(equalToConstant: YRRule.W_Screen).isActive = true
     playView.heightAnchor.constraint(equalToConstant: YRRule.H_Screen / 2).isActive = true
     playView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     playView.topAnchor.constraint(equalTo: urlTextField.bottomAnchor, constant: 30).isActive = true
   }
-  func videoPrepared() {
+  
+    func videoPrepared() {
     playView.player = player
     let playItem = AVPlayerItem(url: movieUrl)
     player.replaceCurrentItem(with: playItem)
+    
+    playView.slider.addTarget(self, action: #selector(ViewController.sliderChanged), for: .valueChanged)
+    playView.slider.addTarget(self, action: #selector(ViewController.sliderBeganTracking), for: .touchDown)
+    playView.slider.addTarget(self, action: #selector(ViewController.sliderEndedTracking), for: [.touchUpInside, .touchUpOutside])
   }
+  
+  
+  //MARK: -- event controller
   var isPlaying: Bool = false
   func palyBtnClick() {
-
     print(" click: \(playView.frame)")
-    
     if isPlaying {
       self.player.pause()
       isPlaying = false
@@ -150,8 +91,30 @@ class ViewController: UIViewController {
       isPlaying = true
     }
     
-//    let vc = VideoPlayerViewController()
-//    navigationController?.pushViewController(vc, animated: false)
+    //    let vc = VideoPlayerViewController()
+    //    navigationController?.pushViewController(vc, animated: false)
   }
   
+  var playRate: Float = 0.0
+  func sliderChanged(slider: UISlider) {
+    print("\(slider.value)")
+    self.playView.updateTime(timeSeconds: Double(slider.value))
+  }
+  
+  func sliderBeganTracking(slider: UISlider) {
+    self.playRate = player.rate
+    if player.rate > 0.0 {
+      player.pause()
+    }
+  }
+  
+  func sliderEndedTracking(slider: UISlider) {
+    player.seek(to: CMTimeMakeWithSeconds(Float64(slider.value), Int32(1.0))) { (completed: Bool) -> Void in
+      if completed {
+        if self.playRate > 0.0 {
+          self.player.play()
+        }
+      }
+    }
+  }
 }
