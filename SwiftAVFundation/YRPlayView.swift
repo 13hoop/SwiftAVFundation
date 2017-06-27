@@ -47,6 +47,9 @@ class YRPlayView: UIView {
     playerLayer?.addObserver(self, forKeyPath: #keyPath(AVPlayerLayer.isReadyForDisplay), options: [NSKeyValueObservingOptions.new, NSKeyValueObservingOptions.initial], context: &playerItemContext)
     
     player?.currentItem?.addObserver(self, forKeyPath: #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp), options: [.old, .new], context: &playerItemContext)
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(videoEnded), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+
 
     periodicTimer = player?.addPeriodicTimeObserver(forInterval: timeInterval, queue: DispatchQueue.main, using: { stepTime in
       self.updateTime(timeSeconds: stepTime.seconds)
@@ -57,6 +60,10 @@ class YRPlayView: UIView {
     let x = self.cmTimeToStr(cmTimeSeconds: timeSeconds)
     self.currentTimeLb.text = x
     self.slider.setValue(Float(timeSeconds), animated: false)
+  }
+  
+  func videoEnded() {
+    print("  ended here ")
   }
 
   override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
@@ -72,6 +79,7 @@ class YRPlayView: UIView {
     
     if keyPath == #keyPath(AVPlayerLayer.isReadyForDisplay) {
       if (playerLayer?.isReadyForDisplay)! {
+        print(" --#keyPath: isReadyForDisplay-- ")
         activityIndicator.stopAnimating()
         slider.maximumValue = Float(player!.currentItem!.duration.seconds)
         totalTimeLb.text = cmTimeToStr(cmTimeSeconds: player!.currentItem!.duration.seconds)
@@ -79,6 +87,8 @@ class YRPlayView: UIView {
     }
     
     if keyPath == #keyPath(AVPlayerItem.isPlaybackLikelyToKeepUp) {
+      print(" --#keyPath: isPlaybackLikelyToKeepUp-- ")
+
       if (player?.currentItem?.isPlaybackLikelyToKeepUp)! {
         activityIndicator.stopAnimating()
       }else {
@@ -102,8 +112,6 @@ class YRPlayView: UIView {
   }
   
   private func setViews() {
-    activityIndicator.hidesWhenStopped = true
-    addSubview(activityIndicator)
     
     addSubview(slider)
     slider.heightAnchor.constraint(equalToConstant: 60)
@@ -122,6 +130,9 @@ class YRPlayView: UIView {
     currentTimeLb.rightAnchor.constraint(equalTo: slider.leftAnchor, constant: 0).isActive = true
     currentTimeLb.leftAnchor.constraint(equalTo: layoutMarginsGuide.leftAnchor, constant: 8).isActive = true
     currentTimeLb.centerYAnchor.constraint(equalTo: slider.centerYAnchor).isActive = true
+    
+    activityIndicator.hidesWhenStopped = true
+    addSubview(activityIndicator)
   }
   
   override func layoutSubviews() {

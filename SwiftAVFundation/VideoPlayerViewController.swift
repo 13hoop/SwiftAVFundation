@@ -86,7 +86,6 @@ class VideoPlayerViewController: UIViewController {
   deinit {
     avPlayer.removeTimeObserver(timeObserver)
     avPlayer.removeObserver(self, forKeyPath: "currentItem.playbackLikelyToKeepUp")
-
   }
   
   func invisibleButtonTapped(sender: UIButton) {

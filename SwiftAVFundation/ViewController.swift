@@ -80,15 +80,12 @@ class ViewController: UIViewController {
   
   
   //MARK: -- event controller
-  var isPlaying: Bool = false
   func palyBtnClick() {
     print(" click: \(playView.frame)")
-    if isPlaying {
+    if player.rate > 0 {
       self.player.pause()
-      isPlaying = false
     }else {
       self.player.play()
-      isPlaying = true
     }
     
     //    let vc = VideoPlayerViewController()
@@ -110,11 +107,9 @@ class ViewController: UIViewController {
   
   func sliderEndedTracking(slider: UISlider) {
     player.seek(to: CMTimeMakeWithSeconds(Float64(slider.value), Int32(1.0))) { (completed: Bool) -> Void in
-      if completed {
         if self.playRate > 0.0 {
           self.player.play()
         }
-      }
     }
   }
 }
